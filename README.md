@@ -48,5 +48,15 @@ Analyzed the distribution of content types (Movies vs. TV Shows).
 Investigated the most frequent directors and their contributions.
 Explored the variety and popularity of genres.
 
+## Key Findings
+Identified the top directors with the most content on Netflix. 
+
+Determined the countries producing the most content.
+
+Highlighted the most popular genres and their combinations.
+
+
+
+
 
 
