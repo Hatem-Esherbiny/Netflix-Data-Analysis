@@ -10,9 +10,7 @@ Data Exploration: Understanding the dataset through various exploratory data ana
 SQL Analysis: Utilizing SQL queries to perform detailed analysis and extract meaningful information from the dataset.
 
 
-
 Dataset
-
 
 
 The dataset contains the following columns:
@@ -38,14 +36,14 @@ duration: Duration of the show.
 listed_in: Genres/categories the show is listed under.
 
 Analysis Steps
-Data Cleaning:
 
+
+Data Cleaning : 
 Removed duplicates and handled missing values.
 Standardized formats for dates and text fields.
 
 
-Data Exploration:
-
+Data Exploration : 
 Analyzed the distribution of content types (Movies vs. TV Shows).
 Investigated the most frequent directors and their contributions.
 Explored the variety and popularity of genres.
