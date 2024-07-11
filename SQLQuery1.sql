@@ -1,16 +1,18 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ---------------- ( USEING DATABASE ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 USE Netflix 
 GO
+
 ---------------- ( CLEANING DATA ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+-- عرض كل البيانات من جدول netflix
 SELECT *	
-FROM netflix ;
- 
+FROM netflix;
+
 ---------------1_( DETECTING MISSING VALUES ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+-- الكشف عن القيم المفقودة في الأعمدة الرئيسية
 SELECT *
 FROM netflix
 WHERE director IS NULL
@@ -23,37 +25,40 @@ WHERE director IS NULL
 
 ---------------2_( DETECTING DUPLICATES ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-SELECT show_id ,count(*)
+-- الكشف عن التكرارات باستخدام show_id
+SELECT show_id, COUNT(*)
 FROM netflix 
 GROUP BY show_id 
-HAVING count(*) > 1 ;
+HAVING COUNT(*) > 1;
 
-SELECT   show_id, type , title, director, country, date_added, release_year, rating, duration, listed_in, COUNT(*)
+-- الكشف عن التكرارات باستخدام جميع الأعمدة
+SELECT show_id, type, title, director, country, date_added, release_year, rating, duration, listed_in, COUNT(*)
 FROM netflix
-GROUP BY show_id, type , title, director, country, date_added, release_year, rating, duration, listed_in
+GROUP BY show_id, type, title, director, country, date_added, release_year, rating, duration, listed_in
 HAVING COUNT(*) > 1;
 
 ---------------3_( Check for errors in the data ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+-- التحقق من صحة التواريخ المضافة
 SELECT *
 FROM netflix
 WHERE date_added > CAST(GETDATE() AS DATE);
 
+-- التحقق من صحة سنة الإصدار
 SELECT *
 FROM netflix
 WHERE release_year > YEAR(CAST(GETDATE() AS DATE));
 
 ---------------4_( Detecting Invalid Ratings ) ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- الكشف عن التقييمات غير الصالحة
 SELECT *
 FROM netflix
-WHERE rating NOT IN ('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR', 'TV-Y', 'TV-Y7', 'TV-G', 'TV-PG', 'TV-14', 'TV-MA','TV-Y7-FV', 'UR');
+WHERE rating NOT IN ('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR', 'TV-Y', 'TV-Y7', 'TV-G', 'TV-PG', 'TV-14', 'TV-MA', 'TV-Y7-FV', 'UR');
 
 ---------------5_( Comprehensive Data Quality Summary )  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+-- ملخص شامل لجودة البيانات
 SELECT 
     SUM(CASE WHEN director IS NULL THEN 1 ELSE 0 END) AS null_director,
     SUM(CASE WHEN country IS NULL THEN 1 ELSE 0 END) AS null_country,
@@ -63,18 +68,14 @@ SELECT
     SUM(CASE WHEN duration IS NULL THEN 1 ELSE 0 END) AS null_duration,
     SUM(CASE WHEN listed_in IS NULL THEN 1 ELSE 0 END) AS null_listed_in,
     SUM(CASE WHEN date_added > CAST(GETDATE() AS DATE) THEN 1 ELSE 0 END) AS invalid_date_added,
-    SUM(CASE WHEN release_year > YEAR (CAST(GETDATE() AS DATE)) THEN 1 ELSE 0 END) AS invalid_release_year,
-    SUM(CASE WHEN rating NOT IN ('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR', 'TV-Y', 'TV-Y7', 'TV-G', 'TV-PG', 'TV-14', 'TV-MA','TV-Y7-FV', 'UR') THEN 1 ELSE 0 END) AS invalid_rate,
+    SUM(CASE WHEN release_year > YEAR(CAST(GETDATE() AS DATE)) THEN 1 ELSE 0 END) AS invalid_release_year,
+    SUM(CASE WHEN rating NOT IN ('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR', 'TV-Y', 'TV-Y7', 'TV-G', 'TV-PG', 'TV-14', 'TV-MA', 'TV-Y7-FV', 'UR') THEN 1 ELSE 0 END) AS invalid_rate,
     COUNT(*) AS total_rows
 FROM netflix;
 
---------- ( End Cleanig )--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
+--------- ( End Cleaning )--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ------( Understanding the Data )------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -84,26 +85,25 @@ FROM netflix
 GROUP BY type;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- ( Number of shows added each year )
 
-SELECT YEAR(date_added) AS 'year of added ', COUNT(*) AS count
+-- ( Number of shows added each year )
+SELECT YEAR(date_added) AS 'year_of_added', COUNT(*) AS count
 FROM netflix
 GROUP BY YEAR(date_added)
-ORDER BY  'Year Of Added '  Desc;
+ORDER BY 'year_of_added' DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- ( Number of shows per director )
 
-SELECT TOP(10)director,country, COUNT(*) AS count
+-- ( Number of shows per director )
+SELECT TOP 10 director, country, COUNT(*) AS count
 FROM netflix
-GROUP BY director , country
-HAVING director != 'Not Given'
-ORDER BY count DESC
+GROUP BY director, country
+HAVING director IS NOT NULL
+ORDER BY count DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- ( Number of shows by rating )
-
 SELECT rating, COUNT(*) AS count
 FROM netflix
 GROUP BY rating
@@ -112,27 +112,33 @@ ORDER BY count DESC;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- ( Number of shows by country )
-
-SELECT TOP(10) country, COUNT(*) AS count
+SELECT TOP 10 country, COUNT(*) AS count
 FROM netflix
-WHERE country != 'Not Given '
+WHERE country IS NOT NULL
 GROUP BY country
-ORDER BY count DESC
+ORDER BY count DESC;
 
-SELECT type, country , count(*)	AS count
-FROM netflix
-GROUP BY type, country 
-Having type = 'TV Show'
-ORDER BY count desc
-
-SELECT type, country , count(*)	AS count
-FROM netflix
-GROUP BY type, country 
-Having type = 'Movie'
-ORDER BY count desc
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- ( Number of shows by type and rating )
 
+-- ( Number of TV Shows by country )
+SELECT type, country, COUNT(*) AS count
+FROM netflix
+WHERE type = 'TV Show'
+GROUP BY type, country 
+ORDER BY count DESC;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- ( Number of Movies by country )
+SELECT type, country, COUNT(*) AS count
+FROM netflix
+WHERE type = 'Movie'
+GROUP BY type, country 
+ORDER BY count DESC;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- ( Number of shows by type and rating )
 SELECT type, rating, COUNT(*) AS count
 FROM netflix
 GROUP BY type, rating
