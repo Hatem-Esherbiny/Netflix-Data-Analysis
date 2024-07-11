@@ -7,11 +7,14 @@ Data Cleaning: Handling missing values, duplicates, and ensuring data consistenc
 
 Data Exploration: Understanding the dataset through various exploratory data analysis techniques.
 
-Insights Generation: Extracting valuable insights such as the most popular genres, countries producing the most content, and trends over the years.
-
 SQL Analysis: Utilizing SQL queries to perform detailed analysis and extract meaningful information from the dataset.
 
+
+
 Dataset
+
+
+
 The dataset contains the following columns:
 
 showid: Unique identifier for each show.
