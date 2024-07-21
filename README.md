@@ -1,5 +1,5 @@
 # Netflix-Data-Analysis
-This project focuses on analyzing Netflix's extensive dataset to uncover trends, patterns, and insights into its content library. The dataset includes information about shows and movies available on Netflix, such as their title, director, country, release year, rating, duration, and listed genres.
+This project focuses on cleaning and organizing Netflix's extensive dataset to reveal trends, patterns and insights in its content library. The data set includes information about the shows and films available on Netflix, such as its title, director, country, year of release, classification, duration, and species listed.
 
 ## Objectives
 
